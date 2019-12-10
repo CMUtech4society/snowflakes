@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+var config = require('../config');
+
+var knex = require('knex');
+var db = knex(config.knexConfiguration);
+
+var lib = require('../lib');
+var { up, down } = lib.db.schema;
+
+
+async function main() {
+  if (process.argv.indexOf('up') > -1) {
+    await up(db);
+  } else if (process.argv.indexOf('down') > -1) {
+    await down(db);
+  } else {
+    console.log('usage: yarn db [up|down]');
+  }
+
+  await db.destroy();
+  // console.log((await db('user').count().first())["count(*)"])
+  // await db.destroy();
+}
+
+main().then(() => console.log('done'));
