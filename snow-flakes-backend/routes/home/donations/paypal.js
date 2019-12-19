@@ -63,7 +63,7 @@ async function get_donations(prev_date, curr_date, donation_table) {
     .then(async function(transactions) {
       for (i = 0; i < transactions.length; i++) {
         const txn = transactions[i];
-        const name = "unknown";//txn.payer_info.payer_name.full_name;
+        const name = txn.payer_info.payer_name.full_name;
         const amt_obj = txn.transaction_info.transaction_amount;
         const amt_str = amt_obj.value + " " + amt_obj.currency_code;
         const comment = txn.transaction_info.transaction_note;
