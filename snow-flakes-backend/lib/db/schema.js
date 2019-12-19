@@ -37,6 +37,14 @@ async function up(knex) {
     t.string('value', 1000);
     t.unique('field');
   });
+
+  var d = new Date();
+  d.setDate(d.getDate() - 21);
+  await knex('setting').insert({
+    field: "last_time_checked",
+    value: d.toISOString()
+  });
+
   await knex.schema.createTable('key', t => {
     t.increments();
     t.string('code', 1000);
@@ -45,7 +53,7 @@ async function up(knex) {
 
   await knex.schema.createTable('donation', t => {
     t.increments();
-    t.string('paypal_id');
+    t.string('name');
     t.string('amount');
     t.boolean('approved');
     t.string('comment', 1000);

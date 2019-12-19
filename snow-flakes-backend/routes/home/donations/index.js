@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var paypal = require("./paypal")
+
 
 /**
  * This router is mounted under .../home/donations, and expects auth mw
@@ -9,20 +11,16 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/new', async (req, res, next) => {
-  var n = Math.ceil(Math.random() * 10);
+  const field = "last_time_checked";
+  const prev_date_obj = await req.db('setting').where({ field }).first() || {};
+  const prev_date = prev_date_obj.value;
+  const curr_date = new Date().toISOString()
 
-  var field = 'paypal_api_key';
-  var { value } = await req.db('setting').where({ field }).first() || {};
+  await req.db('setting').where({ field })
+    .update({ value: curr_date });
 
-  if (!value) {
-    req.flash('donations/view', {
-      title: 'Error',
-      msg: 'Missing paypal_api_key setting'
-    });
-
-    res.redirect(req.app.locals.baseUrl + '/home/donations');
-    return;
-  }
+  var n = await paypal.get_donations(prev_date, curr_date, req.db('donation'));
+  console.log(n);
 
   req.flash('donations/view', { title: 'Success', msg: 'Got ' + n + ' new donations.' });
   res.redirect(req.app.locals.baseUrl + '/home/donations');
