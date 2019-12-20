@@ -53,6 +53,7 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.back = req.header('referrer') || baseUrl;
   res.locals.message = err.message;
+  res.locals.extra = err.extra;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page

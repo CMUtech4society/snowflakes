@@ -11,17 +11,19 @@ router.get('/', (req, res, next) => {
 });
 
 async function getDBSetting(db, field) {
-  return await db('setting').where({ field }).first();
+  var row = await db('setting').where({ field }).first();
+  return row.value;
 }
 
 router.get('/new', async (req, res, next) => {
   var { db } = req;
   var [ client_id, secret ] = await Promise.all([
-    getDBSetting('paypal_client_id'), getDBSetting('paypal_secret'),
+    getDBSetting(db, 'paypal_client_id'), getDBSetting(db, 'paypal_secret'),
   ]);
 
   if (!client_id || !secret) {
-    var msg = 'The paypal_client_id or paypal_secret setting is missing';
+    var msg = 'The paypal_client_id or paypal_secret setting is missing. ' +
+      'Create them on Paypal and add them in the settings page.';
     req.flash('donations/view', { title: 'Error', msg });
     res.redirect(req.app.locals.baseUrl + '/home/donations');
     return;
@@ -30,13 +32,20 @@ router.get('/new', async (req, res, next) => {
   const field = "last_time_checked";
   const prev_date_obj = await req.db('setting').where({ field }).first() || {};
   const prev_date = prev_date_obj.value;
-  const curr_date = new Date().toISOString()
 
-  await req.db('setting').where({ field })
-    .update({ value: curr_date });
+  await db('setting').where({ field }).update({ value: new Date() });
 
-  var n = await paypal.get_donations(prev_date, curr_date, req.db('donation'));
-  console.log(n);
+  try {
+    var n = await paypal.get_donations({
+      client_id,
+      secret
+    }, prev_date, new Date(), db);
+    console.log(n);
+  } catch (e) {
+    var error = new Error('PayPal Error');
+    error.extra = e;
+    return next(error);
+  }
 
   req.flash('donations/view', { title: 'Success', msg: 'Got ' + n + ' new donations.' });
   res.redirect(req.app.locals.baseUrl + '/home/donations');

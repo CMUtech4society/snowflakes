@@ -70,7 +70,6 @@ router.get('/users', async (req, res, next) => {
 router.get('/settings', async (req, res, next) => {
   var keys = await req.db('key').select('*');
   var settings = await req.db('setting').select('*');
-  console.log(settings);
   res.render('home/settings', { keys, settings });
 });
 
@@ -85,7 +84,6 @@ router.get('/settings/clearcodes', async (req, res, next) => {
 });
 
 router.post('/settings', async (req, res, next) => {
-  console.log("hello", req.body);
   if (req.body.keyname) {
     var code = await genToken(10);
     await req.db('keys').insert({ code });
