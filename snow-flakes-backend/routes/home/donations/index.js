@@ -10,7 +10,23 @@ router.get('/', (req, res, next) => {
   res.redirect(req.app.locals.baseUrl + '/home/donations/view');
 });
 
+async function getDBSetting(db, field) {
+  return await db('setting').where({ field }).first();
+}
+
 router.get('/new', async (req, res, next) => {
+  var { db } = req;
+  var [ client_id, secret ] = await Promise.all([
+    getDBSetting('paypal_client_id'), getDBSetting('paypal_secret'),
+  ]);
+
+  if (!client_id || !secret) {
+    var msg = 'The paypal_client_id or paypal_secret setting is missing';
+    req.flash('donations/view', { title: 'Error', msg });
+    res.redirect(req.app.locals.baseUrl + '/home/donations');
+    return;
+  }
+
   const field = "last_time_checked";
   const prev_date_obj = await req.db('setting').where({ field }).first() || {};
   const prev_date = prev_date_obj.value;

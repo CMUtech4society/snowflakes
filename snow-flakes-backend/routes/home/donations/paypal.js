@@ -1,5 +1,5 @@
 const request = require('request');
-const paypal_auth = require("../../../paypal_auth.json");
+// const paypal_auth = require("../../../paypal_auth.json");
 
 function get_auth_key() {
   const options = {
@@ -22,6 +22,7 @@ function get_auth_key() {
         resolve(key);
       } else {
         console.error("Encountered problem generating Paypal key: " + JSON.stringify(response));
+        reject(response.body);
       }
     }).auth(paypal_auth.client_id, paypal_auth.secret);
   });
