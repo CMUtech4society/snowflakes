@@ -29,5 +29,6 @@ router.post('/signup', signup);
 
 /* others */
 router.use('/home', require('./home'));
+router.use('/api', require('./api'));
 
 module.exports = router;
