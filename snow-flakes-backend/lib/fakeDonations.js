@@ -7,6 +7,7 @@ async function fakeDonations(db) {
   for (var i = 0; i < number; i++) {
     donations.push({
       name: faker.name.findName(),
+      when: faker.date.past(),
       amount: faker.commerce.price(),
       approved: false,
       comment: faker.random.words(5),

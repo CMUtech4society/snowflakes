@@ -12,9 +12,38 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/view', async (req, res, next) => {
-  var donations = await req.db('donation').select('*');
+  var { page } = req.query;
+  page = parseInt(page, 10);
+
+  var query = req.db('donation')
+    .select('*')
+    .orderBy('id', 'desc');
+
+  // nothing -> 0, number -> parseInt(number, 10)
+  // -1 -> no clauses
+
+  var pageIsNum = !isNaN(page);
+  if (!page) {
+    query.limit(10).offset(0);
+  } else if (pageIsNum && page > 0) {
+    query.limit(10).offset(page * 10);
+  }
+
+  var donations = await query;
+
+  // format dates on the backend
+  donations = donations.map(d => {
+    try {
+      var { when } = d;
+      d.when_full = moment(when).format('lll');
+      d.when = moment(when).calendar();
+    } catch (e) {}
+    return d;
+  });
+
   res.render('home/donationsview', {
     donations,
+    page: pageIsNum && page || 0,
     view: req.flash('donations/view')
   });
 });
@@ -88,25 +117,53 @@ router.get('/new', async (req, res, next) => {
   ].join(' ');
 
   req.flash('donations/view', { title: 'Success', msg });
-  res.redirect(req.app.locals.baseUrl + '/home/donations');
+  res.redirect(req.app.locals.baseUrl + '/home/donations/view');
 });
 
 router.get('/donation/:id/approval', async (req, res, next) => {
-  if (req.params.id)
+  var { id } = req.params;
+  if (id)
     await req.db('donation').update({
       approved: req.db.raw('not ??', ['approved'])
-    });
-  res.redirect(req.app.locals.baseUrl + '/home/donations');
+    }).where({ id });
+  res.redirect(req.app.locals.baseUrl + '/home/donations/view');
 });
 
 router.post('/donation/:id/comment', async (req, res, next) => {
-  var { comment } = req.body;
+  var { id } = req.params;
+  if (id) {
+    var { comment } = req.body;
 
-  if (!comment)
-    return next(new Error("Missing comment"));
+    if (!comment)
+      return next(new Error("Missing comment"));
 
-  await req.db('donation').update({ comment });
-  res.redirect(req.app.locals.baseUrl + '/home/donations');
+    await req.db('donation').update({ comment }).where({ id });
+  }
+  res.redirect(req.app.locals.baseUrl + '/home/donations/view');
+});
+
+// editing all fields form
+router.get('/donation/:id', async (req, res, next) => {
+  var { id } = req.params;
+  var donation = await req.db('donation').where({ id }).first();
+  donation.when_formatted = moment(donation.when).format('Y-MM-DD');
+  res.render('home/donation', { donation });
+});
+
+// editing all fields submission
+router.post('/donation/:id', async (req, res, next) => {
+  var { id } = req.params;
+  if (id) {
+    var { name, date, amount, approved, comment } = req.body;
+    try {
+      var when = moment(date, 'Y-MM-DD', true).toDate();
+    } catch (e) {
+      var when = new Date()
+    }
+    var donation = { name, when, amount, approved, comment };
+    await req.db('donation').update(donation).where({ id });
+  }
+  res.redirect(req.app.locals.baseUrl + '/home/donations/donation/' + id);
 });
 
 module.exports = router;

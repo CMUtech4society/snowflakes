@@ -54,6 +54,7 @@ async function up(knex) {
   await knex.schema.createTable('donation', t => {
     t.increments();
     t.string('name');
+    t.datetime('when');
     t.string('amount');
     t.boolean('approved');
     t.string('comment', 1000);
