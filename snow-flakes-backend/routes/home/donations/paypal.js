@@ -1,5 +1,6 @@
 const request = require('request');
-// const paypal_auth = require("../../../paypal_auth.json");
+
+var fakeDonations = require('../../../lib/fakeDonations');
 
 function get_auth_key(auth) {
   var { client_id, secret } = auth;
@@ -36,7 +37,7 @@ function get_donation_request(key, prev_date, curr_date) {
     qs: {
       start_date: prev_date,
       end_date: curr_date,
-      transaction_status: "S"
+      // transaction_status: "S"
     },
     headers: {
       "Authorization": "Bearer " + key,
@@ -63,7 +64,9 @@ function get_donation_request(key, prev_date, curr_date) {
   });
 }
 
-async function get_donations(credentials, prev_date, curr_date, db) {
+async function get_donations(credentials, prev_date, curr_date, db, fake) {
+  if (fake)
+    return await fakeDonations(db);
   var num_donations = 0;
 
   var key = await get_auth_key(credentials);
