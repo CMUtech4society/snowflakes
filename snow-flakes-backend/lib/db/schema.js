@@ -38,13 +38,6 @@ async function up(knex) {
     t.unique('field');
   });
 
-  var d = new Date();
-  d.setDate(d.getDate() - 21);
-  await knex('setting').insert({
-    field: "last_time_checked",
-    value: d.toISOString()
-  });
-
   await knex.schema.createTable('key', t => {
     t.increments();
     t.string('code', 1000);
