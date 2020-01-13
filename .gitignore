@@ -64,4 +64,4 @@ typings/
 .next
 
 # key
-snow-flakes-backend/paypal_auth.json
+paypal_auth.json
