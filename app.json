@@ -1,0 +1,13 @@
+{
+  "name": "Snowflakes Backend",
+  "description": "Managing snowflake donations",
+  "repository": "https://github.com/?????????",
+  "logo": "https://node-js-sample.herokuapp.com/snowflake.png",
+  "keywords": ["node", "express", "static"],
+  "addons": [
+    "cleardb:ignite"
+  ],
+  "env": {
+    "HEROKU": true
+  }
+}
