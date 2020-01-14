@@ -1,1 +1,1 @@
-web: yarn start
+web: yarn db up && yarn start
