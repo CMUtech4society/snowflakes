@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 var cors = require('cors');
+var fs = require('fs');
+var path = require('path');
 
 var { findToken, validateToken } = require('./helpers');
 
@@ -25,5 +27,25 @@ var handler = async (req, res, next) => {
 router.use(cors());
 router.get('/donations', handler);
 router.post('/donations', handler);
+
+// var script = undefined;
+router.get('/script', (req, res, next) => {
+  var baseUrl = req.app.locals.baseUrl;
+  var donationsUrl = baseUrl + '/api/donations';
+  // if (!script)
+  var script = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
+  res.send([
+    "window.SNOWFLAKES = window.SNOWFLAKES || {};",
+    "window.SNOWFLAKES.donationsUrl = '" + donationsUrl + "';",
+    script
+  ].join('\n'));
+});
+
+router.use((err, req, res, next) => {
+  res.status(500).json({
+    status: 'error',
+    error: err
+  });
+});
 
 module.exports = router;
