@@ -5,12 +5,32 @@ block homecontent
     <h1 class="display-3">Settings Page</h1>
     <p class="lead">On this, see codes for use with the CORS-enabled API.</p>
     <hr class="m-y-md">
-    <p>In order for this app to work fully, it needs to have the information to interface with various API's.</p>
+    p.
+      In order for this app to work fully, it needs to have the information to
+      interface with various API's. When checking for new donations, it will
+      look for the Paypal details in two settings #[code paypal_client_id] and
+      #[code paypal_secret], which can be entered by copy and pasting their
+      names into the <b>Add new setting</b> field in the bottom left section
+      and then clicking the plus sign. Then pasting their value into the
+      corresponding value field and clicking save.
+
+    p.
+      This app consumes <a href="https://developer.paypal.com/docs/api/transaction-search/v1/">
+      this Paypal API</a>, and to authenticate it uses the mechanism described
+      in <a href="https://developer.paypal.com/docs/api/overview/">Paypal's API Overview</a>.
+      In order to start using it, credentials can be created in the 
+      <a href="https://developer.paypal.com/developer/applications">Developer Dashboard</a> 
+      by following <a href="https://developer.paypal.com/docs/api/overview/#get-credentials">these instructions</a>.
+      In short, you navigate to navigate to the <b>REST API apps</b> section and
+      click <b>Create App</b>. The name does not matter &emdash; the important
+      information is the <b>Client ID</b> and <b>Secret</b>.
 
 
     if (keys && keys.length)
-      p.lead Paste the snippet below into a page on a website to show snowflakes.
-        div(style="margin:15px; border: 4px solid #ddd; border-radius: 8px; padding: 10px; background-color:#eee;")
+      p.lead
+        .
+          Paste the snippet below into a page on a website to show snowflakes.
+        .script-displayer
           pre.m-0
             code.
               #{'<script>'}
@@ -30,9 +50,11 @@ block homecontent
 
   script.
     var newElement = (field) => ('<div class="form-group row">' +
-        '<label for="input' + field + '" class="col-sm-4 form-control-label">' + field + '</label>' +
+        '<label for="input' + field +'" class="col-sm-4 form-control-label">'+
+          field + '</label>' +
         '<div class="col-sm-8">' +
-          '<input type="text" class="form-control" name="' + field + '" id="input' + field + '" placeholder="value">' +
+          '<input type="text" class="form-control" name="' + field +
+            '" id="input' + field + '" placeholder="value">' +
         '</div>' +
       '</div>');
     function addNewAndReset() {
@@ -54,11 +76,11 @@ block homecontent
         h3 Codes
         .mb-4
           <a role="button" href="#{baseUrl}/home/settings/clearcodes" type="button" class="btn btn-danger btn-sm">
-            <i class="fa fa-trash"></i> 
+            i.fa.fa-trash
             span Clear Codes
           </a>
           <a role="button" href="#{baseUrl}/home/settings/newcode" type="button" class="btn btn-success btn-sm">
-            <i class="fa fa-plus"></i> 
+            i.fa.fa-plus
             span Add key
           </a>
 
