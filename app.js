@@ -14,7 +14,7 @@ var bearerToken = require('express-bearer-token');
 var session = require('express-session');
 var KnexSessionStore = require('connect-session-knex')(session);
 var db = knex(config.knexConfiguration);
-var store = new KnexSessionStore({ createtable: true, knex: db });
+var store = new KnexSessionStore({ createtable: false, knex: db });
 
 var indexRouter = require('./routes/index');
 
