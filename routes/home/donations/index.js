@@ -141,7 +141,7 @@ router.get('/donation/:id/approval', async (req, res, next) => {
     req.flash('donations/view', { title: 'Error', msg });
   }
 
-  res.redirect(req.app.locals.baseUrl + '/home/donations/view');
+  res.redirect(req.header('referrer') || req.app.locals.baseUrl + '/home/donations/view');
 });
 
 router.post('/donation/:id/comment', async (req, res, next) => {
@@ -154,7 +154,7 @@ router.post('/donation/:id/comment', async (req, res, next) => {
 
     await req.db('donation').update({ comment }).where({ id });
   }
-  res.redirect(req.app.locals.baseUrl + '/home/donations/view');
+  res.redirect(req.header('referrer') || req.app.locals.baseUrl + '/home/donations/view');
 });
 
 // editing all fields form
@@ -178,7 +178,7 @@ router.post('/donation/:id', async (req, res, next) => {
     var donation = { name, when, amount, approved, comment };
     await req.db('donation').update(donation).where({ id });
   }
-  res.redirect(req.app.locals.baseUrl + '/home/donations/donation/' + id);
+  res.redirect(req.header('referrer') || req.app.locals.baseUrl + '/home/donations/donation/' + id);
 });
 
 module.exports = router;
