@@ -10,7 +10,7 @@
   "env": {
     "HEROKU": {
       "description": "Variable to let the app know it is running on the Heroku Platform",
-      "value": 1,
+      "value": "1",
       "required": true
     },
     "HEROKU_SECRET": {
