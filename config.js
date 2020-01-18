@@ -14,10 +14,14 @@ var knexConfiguration = {
 };
 
 if (process.env.HEROKU)
-  knexOptions = {
+  knexConfiguration = {
     client: 'mysql',
     connection: process.env.CLEARDB_DATABASE_URL
   };
+knexConfiguration = {
+  client: 'mysql',
+  connection: 'mysql://b243aefe6719cb:726b842b@us-cdbr-iron-east-05.cleardb.net/heroku_01e2a877ab54da8?reconnect=true'
+};
 
 module.exports = {
   baseUrl: '/snowflakes',
