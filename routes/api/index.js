@@ -39,6 +39,7 @@ router.get('/script', async (req, res, next) => {
   var settings = settingsRows.reduce((obj, entry) => {
     obj[entry.field] = entry.value; return obj;
   }, {});
+  res.header("Content-Type", "text/javascript");
   res.render('script', { donationsUrl, settings });
 });
 
