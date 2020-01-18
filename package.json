@@ -7,7 +7,7 @@
     "db": "node ./bin/db",
     "addTestDonations": "node ./bin/addTestDonations",
     "test": "mocha --exit",
-    "postInstall": "node ./bin/postInstallHeroku"
+    "postinstall": "node ./bin/postInstallHeroku"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
