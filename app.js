@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var knex = require('knex');
 var flash = require('connect-flash');
+var bearerToken = require('express-bearer-token');
 
 var session = require('express-session');
 var KnexSessionStore = require('connect-session-knex')(session);
@@ -38,6 +39,7 @@ app.use(session({
   saveUninitialized: true,
 }));
 app.use(flash());
+app.use(bearerToken({ headerKey: 'Bearer' }));
 
 app.use((req, res, next) => { req.db = db; next();});
 app.use(baseUrl + '/', indexRouter);

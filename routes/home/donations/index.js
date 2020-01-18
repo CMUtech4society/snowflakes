@@ -126,10 +126,21 @@ router.get('/new', async (req, res, next) => {
 
 router.get('/donation/:id/approval', async (req, res, next) => {
   var { id } = req.params;
-  if (id)
-    await req.db('donation').update({
-      approved: req.db.raw('not ??', ['approved'])
-    }).where({ id });
+  if (id) {
+    var donation = await req.db('donation').where({ id }).first();
+    if (donation)
+      await req.db('donation').update({
+        approved: !donation.approved
+      }).where({ id });
+    else {
+      var msg = 'No such Donation with id ' + id;
+      req.flash('donations/view', { title: 'Error', msg });
+    }
+  } else {
+    var msg = 'No donation id given';
+    req.flash('donations/view', { title: 'Error', msg });
+  }
+
   res.redirect(req.app.locals.baseUrl + '/home/donations/view');
 });
 

@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+var config = require('../config');
+
+var faker = require('faker');
+var knex = require('knex');
+var db = knex(config.knexConfiguration);
+
+var lib = require('../lib');
+var { up, down } = lib.db.schema;
+
+async function main() {
+  var num = parseInt(process.argv[process.argv.length - 1]);
+  num = isNaN(num) ? 20 : num;
+
+  var donations = [];
+  for (var i = 0; i < num; i++) {
+    donations.push({
+      name: faker.name.findName(),
+      amount: faker.random.number({ min: 10, max: 200 })
+    });
+  }
+
+  await db('donation').insert(donations);
+  await db.destroy();
+}
+
+main().then(() => console.log('done'));

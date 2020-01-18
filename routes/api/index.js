@@ -5,11 +5,13 @@ var cors = require('cors');
 var fs = require('fs');
 var path = require('path');
 
-var { findToken, validateToken } = require('./helpers');
+async function validateToken(db, code) {
+  var result = await db('key').where({ code }).first();
+  return !!result;
+}
 
 var handler = async (req, res, next) => {
-  console.log(req.method);
-  var token = findToken(req);
+  var { token } = req;
   if (!token)
     return res.status(400).json({ error: 'No Credentials' });
 
@@ -18,7 +20,7 @@ var handler = async (req, res, next) => {
     return res.status(403).json({ error: 'Bad Credentials' });
 
   var donations = await req.db('donation')
-    .select(['name', 'when', 'amount', 'comment'])
+    .select([ 'name', /*'when',*/ 'amount', /*'comment'*/ ])
     .where({ approved: true });
 
   res.json({ donations });
@@ -28,17 +30,16 @@ router.use(cors());
 router.get('/donations', handler);
 router.post('/donations', handler);
 
-// var script = undefined;
-router.get('/script', (req, res, next) => {
+router.get('/script', async (req, res, next) => {
   var baseUrl = req.app.locals.baseUrl;
-  var donationsUrl = baseUrl + '/api/donations';
-  // if (!script)
-  var script = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
-  res.send([
-    "window.SNOWFLAKES = window.SNOWFLAKES || {};",
-    "window.SNOWFLAKES.donationsUrl = '" + donationsUrl + "';",
-    script
-  ].join('\n'));
+  var fullBase = req.protocol + '://' + req.get('host') + baseUrl;
+  var donationsUrl = fullBase + '/api/donations';
+
+  var settingsRows = await req.db('setting').select('*');
+  var settings = settingsRows.reduce((obj, entry) => {
+    obj[entry.field] = entry.value; return obj;
+  }, {});
+  res.render('script', { donationsUrl, settings });
 });
 
 router.use((err, req, res, next) => {
