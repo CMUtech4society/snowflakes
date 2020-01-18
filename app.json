@@ -18,7 +18,8 @@
       "generator": "secret"
     },
     "TITLE": {
-      "description": "Title of the web pages, default if omitted is Snow Flakes Backend"
+      "description": "Title of the web pages, default if omitted is Snow Flakes Backend",
+      "required": false
     }
   }
 }
