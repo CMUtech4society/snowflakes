@@ -1,13 +1,24 @@
 {
   "name": "Snowflakes Backend",
   "description": "Managing snowflake donations",
-  "repository": "https://github.com/?????????",
-  "logo": "https://node-js-sample.herokuapp.com/snowflake.png",
-  "keywords": ["node", "express", "static"],
+  "repository": "https://github.com/CMUtech4society/snowflakes",
+  "logo": "https://raw.githubusercontent.com/CMUtech4society/snowflakes/master/snowflake.png",
+  "success_url": "/snowflakes",
   "addons": [
     "cleardb:ignite"
   ],
   "env": {
-    "HEROKU": true
+    "HEROKU": {
+      "description": "Variable to let the app know it is running on the Heroku Platform",
+      "value": 1,
+      "required": true
+    },
+    "HEROKU_SECRET": {
+      "description": "Random number so no one can reverse engineer passwords",
+      "generator": "secret"
+    },
+    "TITLE": {
+      "description": "Title of the web pages, default if omitted is Snow Flakes Backend"
+    }
   }
 }

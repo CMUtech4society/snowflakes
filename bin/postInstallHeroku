@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+var config = require('../config');
+
+var knex = require('knex');
+var db = knex(config.knexConfiguration);
+
+var lib = require('../lib');
+var { up, down } = lib.db.schema;
+
+
+async function main() {
+  console.log("Post Install script, env HEROKU", process.env.HEROKU);
+  if (process.env.HEROKU) {
+    try {
+      await up(db);
+    } catch (e) {
+      console.log('Tried and failed to create database post install');
+      console.error(e);
+    }
+    await db.destroy();
+  } else {
+    console.log("Did not try to create database post install");
+  }
+}
+
+main().then(() => console.log('done'));
