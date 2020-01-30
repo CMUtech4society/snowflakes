@@ -120,7 +120,7 @@
       var { width, height } = defaultDimensions;
       var X = parseInt('#{settings.whole_page_script_top}'); if (X > 0) inH = inH.replace('X', X); else inH = inH.replace('X', width);
       var Y = parseInt('#{settings.whole_page_script_left}'); if (Y > 0) inH = inH.replace('Y', Y); else inH = inH.replace('Y', height);
-      snowflakesSvg.innerHTML = inH;
+      // snowflakesSvg.innerHTML = inH;
       snowflakesDiv.appendChild(snowflakesSvg);
       document.getElementsByTagName('body')[0].prepend(snowflakesDiv);
 
