@@ -198,12 +198,12 @@
     if (!svgElement)
       throw new Error('Snowflakes: No Element with that ID');
 
-    if (innerText)
-      svgElement.innerHTML = innerText;
-    else if (!innerText && innerText !== '')
-      svgElement.innerHTML = "<text x='" + ddims.width + "' y='" +
-        ddims.height +
-        "' font-family='Open Sans' font-weight='300' font-size='18px'></text>";
+    // if (innerText)
+    //   svgElement.innerHTML = innerText;
+    // else if (!innerText && innerText !== '')
+    //   svgElement.innerHTML = "<text x='" + ddims.width + "' y='" +
+    //     ddims.height +
+    //     "' font-family='Open Sans' font-weight='300' font-size='18px'></text>";
 
     var { width, height } = dims || {};
     width = width || ddims.width;
