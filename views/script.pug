@@ -116,7 +116,7 @@
       console.log('Making snowflakesSvg');
       var snowflakesSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       var id = snowflakesSvg.id = makeid(10, true);
-      var inH = "<text x='X' y='Y' font-family='Open Sans' font-weight='300' font-size='18px'></text>";
+      var inH = "<text x='X' y='Y' font-family='Open Sans' text-anchor='bottom' font-weight='300' font-size='18px'></text>";
       var { width, height } = defaultDimensions;
       var X = parseInt('#{settings.whole_page_script_top}'); if (X > 0) inH = inH.replace('X', X); else inH = inH.replace('X', width);
       var Y = parseInt('#{settings.whole_page_script_left}'); if (Y > 0) inH = inH.replace('Y', Y); else inH = inH.replace('Y', height);
@@ -145,7 +145,7 @@
 
       var dims = {
         width: window.innerWidth * 0.9,
-        height: window.innerHeight
+        height:  window.innerHeight
       };
 
       /**

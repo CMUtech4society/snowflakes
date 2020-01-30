@@ -70,7 +70,7 @@ router.get('/users', async (req, res, next) => {
 router.get('/settings', async (req, res, next) => {
   var keys = await req.db('key').select('*');
   var settings = await req.db('setting').select('*');
-  var fullBase = req.protocol + '://' + req.get('host') + req.app.locals.baseUrl;
+  var fullBase = 'https://' + req.get('host') + req.app.locals.baseUrl;
   res.render('home/settings', { keys, settings, fullBase });
 });
 
