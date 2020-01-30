@@ -97,15 +97,20 @@
     async function main() {
       var { makeid, defaultDimensions } = window.SNOWFLAKES;
 
-      // create a container div that covers/scrolls with the page
-      console.log('Making snowflakesDiv');
-      var snowflakesDiv = document.createElement('div');
-      snowflakesDiv.style.position = 'fixed';
-      snowflakesDiv.style.top = '0';        snowflakesDiv.style.left = '0';
-      snowflakesDiv.style.height = '100vh'; snowflakesDiv.style.width = '90vw';
-      // this makes the rest of the page unclickable.
-      // snowflakesDiv.style.pointerEvents = 'none';
-      // snowflakesDiv.style.zIndex = '9999';
+      // // create a container div that covers/scrolls with the page
+      // console.log('Making snowflakesDiv');
+      // var snowflakesDiv = document.createElement('div');
+      // snowflakesDiv.style.position = 'fixed';
+      // snowflakesDiv.style.top = '0';        snowflakesDiv.style.left = '0';
+      // snowflakesDiv.style.height = '100vh'; snowflakesDiv.style.width = '90vw';
+      // // this makes the rest of the page unclickable.
+      // // snowflakesDiv.style.pointerEvents = 'none';
+      // // snowflakesDiv.style.zIndex = '9999';
+      var snowflakesDiv = document.getElementById(window.SNOWFLAKES.snowflakesDiv || 'snowflakesDiv');
+      if (!snowflakesDiv) {
+        console.log('did not find a div');
+        return;
+      }
       
       // create a Name Spaced (createElementNS) element
       console.log('Making snowflakesSvg');
