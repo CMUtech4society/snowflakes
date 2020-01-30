@@ -32,7 +32,7 @@ router.post('/donations', handler);
 
 router.get('/script', async (req, res, next) => {
   var baseUrl = req.app.locals.baseUrl;
-  var fullBase = req.protocol + '://' + req.get('host') + baseUrl;
+  var fullBase = 'https://' + req.get('host') + baseUrl;
   var donationsUrl = fullBase + '/api/donations';
 
   var settingsRows = await req.db('setting').select('*');
