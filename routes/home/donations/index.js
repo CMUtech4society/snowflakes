@@ -54,6 +54,20 @@ async function getDBSetting(db, field) {
   return row ? row.value : null;
 }
 
+router.get('/create', async (req, res, next) => {
+  var donation_obj = {
+    'name': new Date().getSeconds() + '' + (new Date().getMilliseconds() + '').padStart(3, '0'),
+    'when': new Date(),
+    'amount': '27',
+    'approved': false,
+    'comment': 'new donation'
+  };
+
+  var [ id ] = await req.db('donation').insert(donation_obj);
+
+  res.redirect(req.app.locals.baseUrl + '/home/donations/donation/' + id);
+});
+
 router.get('/new', async (req, res, next) => {
   var { db } = req;
 
