@@ -20,7 +20,7 @@ var handler = async (req, res, next) => {
     return res.status(403).json({ error: 'Bad Credentials' });
 
   var donations = await req.db('donation')
-    .select([ 'name', /*'when',*/ 'amount', /*'comment'*/ ])
+    .select([ 'name', 'when', 'amount', 'comment' ])
     .where({ approved: true });
 
   res.json({ donations });
