@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 var paypal = require("./paypal")
 
+var csvStringify = require('csv-stringify');
 var moment = require('moment');
+var mysql = require('mysql');
 
 /**
  * This router is mounted under .../home/donations, and expects auth mw
@@ -53,6 +55,15 @@ async function getDBSetting(db, field) {
   var row = await db('setting').where({ field }).first();
   return row ? row.value : null;
 }
+
+router.get('/backup', async (req, res, next) => {
+  var donations = await req.db('donation').select('*');
+  csvStringify(donations, (err, output) => {
+    if (err) return next(err);
+    res.set('Content-Type', 'text/plain');
+    res.end(output);
+  });
+});
 
 router.get('/create', async (req, res, next) => {
   var donation_obj = {
